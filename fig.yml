@@ -1,0 +1,47 @@
+src:
+    image: codelovers/symfony-benchmark-app
+
+hhvm:
+    image: codelovers/symfony-benchmark-hhvm
+    expose:
+        - "9000"
+    volumes_from:
+        - src
+    links:
+        - mongo:mongodb
+
+php55:
+    image: codelovers/symfony-benchmark-php55
+    expose:
+        - "9000"
+    volumes_from:
+        - src
+    links:
+        - mongo:mongodb
+
+php54:
+    image: codelovers/symfony-benchmark-php54
+    expose:
+        - "9000"
+    volumes_from:
+        - src
+    links:
+        - mongo:mongodb
+
+mongo:
+    image: mongo
+    ports:
+        - "27017:27017"
+
+nginx:
+    image: codelovers/symfony-benchmark-nginx
+    links:
+        - hhvm
+        - php55
+        - php54
+    volumes_from:
+        - src
+    ports:
+        - "8080:8080"
+        - "8081:8081"
+        - "8082:8082"
